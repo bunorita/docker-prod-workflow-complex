@@ -21,3 +21,15 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=posgres_password
       - PGPORT=5432
+  client:
+    context: ./client
+    dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules # Inside the container, don't override this directory
+      - ./client:/app
+  worker:
+    context: ./worker
+    dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules # Inside the container, don't override this directory
+      - ./worker:/app
