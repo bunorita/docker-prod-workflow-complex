@@ -20,6 +20,8 @@ services:
     volumes:
       - /app/node_modules # Inside the container, don't override this directory
       - ./server:/app
+    depends_on:
+      - postgres
     environment:
       - REDIS_HOST=redis # use the service name
       - REDIS_PORT=6379
@@ -29,14 +31,20 @@ services:
       - PGPASSWORD=posgres_password
       - PGPORT=5432
   client:
-    context: ./client
-    dockerfile: Dockerfile.dev
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
     volumes:
       - /app/node_modules # Inside the container, don't override this directory
       - ./client:/app
+    stdin_open: true
   worker:
-    context: ./worker
-    dockerfile: Dockerfile.dev
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
     volumes:
       - /app/node_modules # Inside the container, don't override this directory
       - ./worker:/app
+    environment:
+      - REDIS_HOST=redis # use the service name
+      - REDIS_PORT=6379
