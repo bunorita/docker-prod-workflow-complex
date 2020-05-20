@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  # build image to run test
+  - docker build -t bunorita/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  # run test
+  - docker run -e CI=true bunorita/react-test npm test -- --coverage
+
+after_success:
+  # build images for production
+  - docker build -t bunorita/multi-client ./client
+  - docker build -t bunorita/multi-nginx ./nginx
+  - docker build -t bunorita/multi-server ./server
+  - docker build -t bunorita/multi-worker ./worker
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # push those images to docker hub
+  - docker push bunorita/multi-client
+  - docker push bunorita/multi-nginx
+  - docker push bunorita/multi-server
+  - docker push bunorita/multi-worker
