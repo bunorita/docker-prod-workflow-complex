@@ -3,7 +3,7 @@ services:
   postgres:
     image: "postgres:latest"
     environment:
-      - POSTGRES_PASSWORD=posgres_password
+      - POSTGRES_PASSWORD=postgres_password
   redis:
     image: "redis:latest"
   nginx:
@@ -28,7 +28,7 @@ services:
       - PGUSER=postgres
       - PGHOST=postgres # use the service name
       - PGDATABASE=postgres
-      - PGPASSWORD=posgres_password
+      - PGPASSWORD=postgres_password
       - PGPORT=5432
   client:
     build:
